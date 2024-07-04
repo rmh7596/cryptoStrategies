@@ -11,10 +11,10 @@ from datetime import datetime
 import urllib.request
 import zipfile
 
-dates = pd.date_range(start="2019-09-17",end="2023-07-14").strftime("%Y-%m-%d").to_list()
+dates = pd.date_range(start="2021-01-14",end="2024-07-02").strftime("%Y-%m-%d").to_list()
 
 for day in dates:
-    url = "https://data.binance.us/public_data/spot/daily/klines/BTCUSD/5m/BTCUSD-5m-" + day + ".zip"
+    url = "https://data.binance.us/public_data/spot/daily/klines/BTCUSDC/1h/BTCUSDC-1h-" + day + ".zip"
     print(url)
     #urllib.request.urlretrieve(url, "thing.zip")
     req = requests.get(url)
@@ -22,9 +22,11 @@ for day in dates:
     f.write(req.content)
     f.close()
 
-    with zipfile.ZipFile("zips/"+day+".zip", 'r') as zip_ref:
-        zip_ref.extractall("/Users/RyanHaver/Projects/cryptoStrategies/data/")
-    
+    try:
+        with zipfile.ZipFile("zips/"+day+".zip", 'r') as zip_ref:
+            zip_ref.extractall("/Users/RyanHaver/Projects/cryptoStrategies/data/")
+    except zipfile.BadZipFile:
+        continue
 
 # load_dotenv()
 
