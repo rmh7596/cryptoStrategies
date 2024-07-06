@@ -2,14 +2,14 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import plot_heatmaps
 import pandas as pd
 import numpy as np
-import multiprocessing as mp
-mp.set_start_method('fork')
+# import multiprocessing as mp
+# mp.set_start_method('fork')
 
 class Momentum(Strategy):
-    window = 9 # from optimizer
-    momentum_trigger = 14 # from optimizer
+    window = 7 # from optimizer
+    momentum_trigger = 49 # from optimizer
     risk = 0.01
-    tp = 0.02
+    tp = 0.09
 
     def init(self):
         pass
@@ -71,14 +71,13 @@ bt = Backtest(full_data, Momentum,cash=100000,exclusive_orders=True)
 output = bt.run()
 print(output)
 
-stats, heatmap = bt.optimize(window=range(6,24,1), 
-                    momentum_trigger=range(5,25,1),
-                    risk=[0.01,0.02,0.03,0.04],
-                    tp=[0.02,0.03,0.04,0.05],
-                    return_heatmap = True,
-                    )
-print(stats)
-print(stats._strategy)
-print(heatmap)
-plot_heatmaps(heatmap, agg='mean')
+# stats, heatmap = bt.optimize(window=range(1,10,1), 
+#                     momentum_trigger=range(20,50,1),
+#                     tp=[0.03,0.04,0.05, 0.06],
+#                     return_heatmap = True,
+#                     )
+# print(stats)
+# print(stats._strategy)
+# print(heatmap)
+# plot_heatmaps(heatmap, agg='mean')
 #bt.plot()
