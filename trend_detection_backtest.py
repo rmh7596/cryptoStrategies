@@ -2,14 +2,14 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import plot_heatmaps
 import pandas as pd
 import numpy as np
-# import multiprocessing as mp
-# mp.set_start_method('fork')
+import multiprocessing as mp
+mp.set_start_method('fork')
 
 class Momentum(Strategy):
-    window = 7 # from optimizer
-    momentum_trigger = 49 # from optimizer
-    risk = 0.01
-    tp = 0.09
+    window = 24
+    momentum_trigger = 20
+    risk = 0.2 #from optimizer
+    tp = 0.21 #from optimizer
 
     def init(self):
         pass
@@ -63,17 +63,20 @@ full_data.set_index('open_time', inplace=True)
 full_data.drop(columns=['close_time', 'count', 'taker_buy_base_volume', 'taker_buy_quote_volume', 'quote_volume'], inplace=True)
 full_data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
 
-full_data = (full_data / 100).assign()  # μBTC OHLC prices
+scale_factor = 100000
+full_data = (full_data / scale_factor).assign(Volume=full_data.Volume * scale_factor)
+
 #print(full_data)
 #input()
 
-bt = Backtest(full_data, Momentum,cash=100000,exclusive_orders=True)
-output = bt.run()
-print(output)
+bt = Backtest(full_data, Momentum,cash=1000,exclusive_orders=True)
+#output = bt.run()
+#print(output)
+#print(output._trades)
 
-# stats, heatmap = bt.optimize(window=range(1,10,1), 
-#                     momentum_trigger=range(20,50,1),
-#                     tp=[0.03,0.04,0.05, 0.06],
+# stats, heatmap = bt.optimize(
+#                     tp=[0.20,0.21,0.22,0.23,0.24,0.25],
+#                     risk=[0.20,0.21,0.22,0.23,0.24,0.25],
 #                     return_heatmap = True,
 #                     )
 # print(stats)
