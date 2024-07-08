@@ -57,8 +57,6 @@ def long_order():
     quan = round(get_account_bal()*risk/current_price, 5)
     sl_price = round(current_price * (1-risk), 2)
     tp_price = round(current_price * (1+tp), 2)
-    print('{0:.5f}'.format(quan))
-    print(current_price, sl_price, tp_price)
     market_order_params = {
         'symbol': 'BTCUSDT',
         'side': 'BUY',
@@ -96,7 +94,6 @@ def short_order():
     quan = round(get_account_bal()*risk/current_price, 5)
     sl_price = round(current_price * (1+risk), 2)
     tp_price = round(current_price * (1-tp), 2)
-    print('{0:.5f}'.format(quan))
     market_order_params = {
         'symbol': 'BTCUSDT',
         'side': 'SELL',
@@ -137,12 +134,15 @@ def event_loop():
         print(momentum)
         if momentum > momentum_trigger:
             # Sell
-            short_order()
+            print("Short")
+            print(short_order())
         elif momentum < -momentum_trigger:
             #Buy
-            long_order()
+            print("Long")
+            print(long_order())
 
 def main():
+    print("Starting scheduler")
     scheduler.start()
     while True:
         pass
