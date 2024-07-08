@@ -17,7 +17,7 @@ tp = 0.21 #from optimizer
 
 open_orders_uri = "/api/v3/openOrders"
 account_data_uri_path = "/api/v3/account"
-order_uri_path = "/api/v3/order"
+order_uri_path = "/api/v3/order/test"
 account_params = {
     "timestamp": int(round(time.time() * 1000)),
 }
@@ -54,10 +54,11 @@ def get_open_orders():
 
 def long_order():
     current_price = get_current_price()
-    quan = round(get_account_bal()*risk/current_price(), 5)
-    sl_price = current_price * (1-risk)
-    tp_price = current_price * (1+tp)
+    quan = round(get_account_bal()*risk/current_price, 5)
+    sl_price = round(current_price * (1-risk), 2)
+    tp_price = round(current_price * (1+tp), 2)
     print('{0:.5f}'.format(quan))
+    print(current_price, sl_price, tp_price)
     market_order_params = {
         'symbol': 'BTCUSDT',
         'side': 'BUY',
@@ -70,8 +71,10 @@ def long_order():
         'symbol': 'BTCUSDT',
         'side': 'SELL',
         'type': 'STOP_LOSS_LIMIT',
+        'timeInForce': 'GTC',
         'quantity': '{0:.5f}'.format(quan),
-        'price': sl_price,
+        'price': current_price,
+        'stopPrice': sl_price,
         'timestamp': int(round(time.time() * 1000))
     }
     sl_order_request = account_info.binanceus_post_request(order_uri_path, sl_order_params, os.getenv('PUBLIC_KEY'), os.getenv('PRIVATE_KEY'))
@@ -79,8 +82,10 @@ def long_order():
         'symbol': 'BTCUSDT',
         'side': 'SELL',
         'type': 'TAKE_PROFIT_LIMIT',
+        'timeInForce': 'GTC',
         'quantity': '{0:.5f}'.format(quan),
-        'price': tp_price,
+        'price': current_price,
+        'stopPrice': tp_price,
         'timestamp': int(round(time.time() * 1000))
     }
     tp_order_request = account_info.binanceus_post_request(order_uri_path, tp_order_params, os.getenv('PUBLIC_KEY'), os.getenv('PRIVATE_KEY'))
@@ -88,9 +93,9 @@ def long_order():
 
 def short_order():
     current_price = get_current_price()
-    quan = round(get_account_bal()*risk/current_price(), 5)
-    sl_price = current_price * (1+risk)
-    tp_price = current_price * (1-tp)
+    quan = round(get_account_bal()*risk/current_price, 5)
+    sl_price = round(current_price * (1+risk), 2)
+    tp_price = round(current_price * (1-tp), 2)
     print('{0:.5f}'.format(quan))
     market_order_params = {
         'symbol': 'BTCUSDT',
@@ -104,8 +109,10 @@ def short_order():
         'symbol': 'BTCUSDT',
         'side': 'BUY',
         'type': 'STOP_LOSS_LIMIT',
+        'timeInForce': 'GTC',
         'quantity': '{0:.5f}'.format(quan),
-        'price': sl_price,
+        'price': current_price,
+        'stopPrice': sl_price,
         'timestamp': int(round(time.time() * 1000))
     }
     sl_order_request = account_info.binanceus_post_request(order_uri_path, sl_order_params, os.getenv('PUBLIC_KEY'), os.getenv('PRIVATE_KEY'))
@@ -113,8 +120,10 @@ def short_order():
         'symbol': 'BTCUSDT',
         'side': 'BUY',
         'type': 'TAKE_PROFIT_LIMIT',
+        'timeInForce': 'GTC',
         'quantity': '{0:.5f}'.format(quan),
-        'price': tp_price,
+        'price': current_price,
+        'stopPrice': tp_price,
         'timestamp': int(round(time.time() * 1000))
     }
     tp_order_request = account_info.binanceus_post_request(order_uri_path, tp_order_params, os.getenv('PUBLIC_KEY'), os.getenv('PRIVATE_KEY'))
