@@ -131,7 +131,7 @@ scheduler = BackgroundScheduler()
 def event_loop():
     if len(get_open_orders()) < 3:
         momentum = get_momentum()
-        print(momentum)
+        print(datetime.now(),momentum)
         if momentum > momentum_trigger:
             # Sell
             print("Short")
