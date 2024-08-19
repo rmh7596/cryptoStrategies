@@ -132,11 +132,11 @@ def event_loop():
     if len(get_open_orders()) < 3:
         momentum = get_momentum()
         print(datetime.now(),momentum)
-        if momentum > momentum_trigger:
-            # Sell
-            print("Short")
-            print(short_order())
-        elif momentum < -momentum_trigger:
+        # if momentum > momentum_trigger:
+        #     # Sell
+        #     print("Short")
+        #     print(short_order())
+        if momentum < -momentum_trigger:
             #Buy
             print("Long")
             print(long_order())
